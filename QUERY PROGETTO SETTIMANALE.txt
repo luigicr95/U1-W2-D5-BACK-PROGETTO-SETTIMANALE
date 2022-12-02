@@ -1,0 +1,70 @@
+--1
+SELECT COUNT(*) AS TotaleVerbali FROM VERBALE
+WHERE DataTrascrizioneVerbale IS NOT NULL
+
+--2
+SELECT COUNT(*) AS VerbaliPerAnagrafe, IDAnagrafica FROM VERBALE
+GROUP BY IDAnagrafica
+
+--2 MA CON NOMI ANAGRAFICA
+SELECT COUNT(*) AS Verbali, VERBALE.IDAnagrafica, Cognome, Nome FROM VERBALE
+INNER JOIN ANAGRAFICA ON
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+GROUP BY VERBALE.IDAnagrafica, Cognome, Nome
+
+--3 MA CON NOME VIOLAZIONE
+SELECT COUNT(*) AS Verbali, VERBALE.IDViolazione, Descrizione FROM VERBALE
+INNER JOIN TIPOVIOLAZIONE ON
+VERBALE.IDViolazione = TIPOVIOLAZIONE.IDViolazione
+GROUP BY VERBALE.IDViolazione, Descrizione
+
+--4 SEMPRE CON NOME
+SELECT SUM(DecurtamentoPunti) AS PuntiDecurtati, VERBALE.IDAnagrafica, Cognome, Nome FROM VERBALE
+INNER JOIN ANAGRAFICA ON
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+GROUP BY VERBALE.IDAnagrafica, Cognome, Nome
+
+--5
+SELECT Cognome, Nome, DataViolazione, IndirizzoViolazione, Importo, DecurtamentoPunti, VERBALE.IDAnagrafica FROM VERBALE
+INNER JOIN ANAGRAFICA ON 
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+WHERE ANAGRAFICA.Città = 'Palermo'
+
+--6
+SELECT Cognome, Nome, DataViolazione, IndirizzoViolazione, Importo, DecurtamentoPunti, VERBALE.IDAnagrafica FROM VERBALE
+INNER JOIN ANAGRAFICA ON 
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+WHERE DataViolazione BETWEEN '2009-02-01' AND '2009-07-01'
+
+--7
+SELECT SUM(Importo) AS TotaleImporto, Nome, Cognome, VERBALE.IDAnagrafica FROM VERBALE
+INNER JOIN ANAGRAFICA ON
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+GROUP BY ANAGRAFICA.Nome, ANAGRAFICA.Cognome, VERBALE.IDAnagrafica
+
+--8
+SELECT * FROM ANAGRAFICA
+WHERE Città = 'Palermo'
+
+--10
+SELECT COUNT(*), NominativoAgente FROM VERBALE
+GROUP BY NominativoAgente
+
+--11
+SELECT Cognome, Nome, Indirizzo, DataViolazione, Importo, DecurtamentoPunti FROM VERBALE
+INNER JOIN ANAGRAFICA ON
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+WHERE DecurtamentoPunti > 5
+
+--12
+SELECT Cognome, Nome, Indirizzo, DataViolazione, Importo, DecurtamentoPunti FROM VERBALE
+INNER JOIN ANAGRAFICA ON
+VERBALE.IDAnagrafica = ANAGRAFICA.IDAnagrafica
+WHERE Importo > 400
+
+--Query di prova: intendevo mostrare Nome e Cognome della persona accanto alla Descrizione della violazione commessa
+SELECT Cognome, Nome, Descrizione FROM ANAGRAFICA
+INNER JOIN  VERBALE ON
+ANAGRAFICA.IDAnagrafica = VERBALE.IDAnagrafica
+INNER JOIN TIPOVIOLAZIONE ON
+TIPOVIOLAZIONE.IDViolazione = VERBALE.IDViolazione

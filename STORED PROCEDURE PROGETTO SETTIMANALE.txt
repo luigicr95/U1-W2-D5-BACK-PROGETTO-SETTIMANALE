@@ -1,0 +1,54 @@
+Stored Procedure 1, ma in questo modo ottengo anche quante volte la violazione è stata commessa nell'anno
+
+ALTER PROCEDURE [dbo].[ContravvenzioniAnnuali] (@AnnoContravvenzioni INT)
+AS
+BEGIN
+		SELECT COUNT(*) AS OccorrenzeViolazione, Descrizione
+		FROM TIPOVIOLAZIONE
+		INNER JOIN 
+		VERBALE ON
+		TIPOVIOLAZIONE.IDViolazione = VERBALE.IDViolazione
+		WHERE YEAR(VERBALE.DataViolazione) = @AnnoContravvenzioni
+		GROUP BY Descrizione
+END
+
+-----------------------------------------
+
+Stored Procedure 2
+
+ALTER PROCEDURE [dbo].[PuntiPerData] (@Data DATE)
+AS
+BEGIN
+		SELECT SUM(DecurtamentoPunti) as PuntiDecurtati, DataViolazione FROM VERBALE
+		WHERE DataViolazione = @Data
+		GROUP BY DataViolazione
+
+END
+
+-----------------------------------------
+
+Stored Procedure 3
+
+
+CREATE PROCEDURE DeleteVerbale (@IDVerbale int)
+AS
+BEGIN
+		DELETE FROM VERBALE
+		WHERE IDVerbale = @IDVerbale
+
+END
+GO
+
+----------------------------------------
+
+Query parametrica 9
+
+
+CREATE PROCEDURE DataImportoPuntiPerData (@Data DATE)
+AS
+BEGIN
+		SELECT DataViolazione, Importo, DecurtamentoPunti FROM VERBALE
+		WHERE DataViolazione = @Data
+
+END
+GO
